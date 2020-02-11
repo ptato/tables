@@ -2,12 +2,12 @@ use std::fs;
 use std::path::Path;
 
 #[derive(Debug)]
-struct FileReader {
+pub struct FileReader {
     source: Vec<char>,
     source_pos: usize,
 }
 impl FileReader {
-    fn from_file<P: AsRef<Path>>(filename: P) -> FileReader {
+    pub fn from_file<P: AsRef<Path>>(filename: P) -> FileReader {
         let source = fs::read_to_string(filename).unwrap_or("".to_string());
         FileReader{ source: source.chars().collect(), source_pos: 0 }
     }
@@ -18,7 +18,7 @@ impl FileReader {
             self.source_pos += 1;
         }
     }
-    fn next_word(&mut self) -> Option<String> {
+    pub fn next_word(&mut self) -> Option<String> {
         let mut result = String::new();
         self.skip_whitespace();
         loop {
@@ -29,7 +29,7 @@ impl FileReader {
         }
         if result == "" { None } else { Some(result) }
     }
-    fn to_end_of_line(&mut self) -> Option<String> {
+    pub fn to_end_of_line(&mut self) -> Option<String> {
         let mut result = String::new();
         self.skip_whitespace();
         loop {

@@ -2,6 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>Tables 1.0.0</title>
+    <link res="stylesheet" type="text/css" href="./styles.css">
 </head>
 <body>
     {{ for table in tables }}
@@ -10,13 +11,20 @@
             <th>d100</th>
             <th>idk</th>
         </tr>
-        {{ for range in table.ranges }}
+        {{ for entry in table.entries -}}
         <tr>
-            <td>{ range }</td>
-            <td>{ range }</td>
+            <td>{ entry.range_start }-{ entry.range_end }</td>
+            <td>{ entry.field }</td>
         </tr>
         {{ endfor }}
     </table>
     {{ endfor }}
+
+<style>
+/* %%%escape */
+body \{
+    font-family: Cousine, 'Liberation Mono', monospace;
+}
+</style>
 </body>
 </html>
