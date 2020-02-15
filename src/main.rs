@@ -1,13 +1,17 @@
+extern crate serde;
 #[macro_use]
 extern crate serde_derive;
-extern crate serde;
 extern crate tinytemplate;
+extern crate web_view;
+extern crate nfd;
 
 mod file_reader;
 
 use std::fs::File;
 use std::io::prelude::*;
 use tinytemplate::TinyTemplate;
+use web_view::*;
+use nfd::Response;
 
 
 #[derive(Serialize, Clone, Debug)]
@@ -29,7 +33,17 @@ static TABLES_TEMPLATE: &'static str = include_str!("tables.html");
 static TEMPLATE_STYLES: &'static str = include_str!("styles.css");
 
 fn main() {
-    let mut demo_reader = file_reader::FileReader::from_file("assets/inputs/demo.tables");
+    let default_filename: String = String::from("assets/inputs/demo.tables");
+    let exe_path: String = std::env::current_exe().unwrap().into_os_string().into_string().unwrap();
+    
+    let result = nfd::open_file_dialog(None, Some(exe_path.as_str())).unwrap();
+    let filename = match result {
+        Response::Okay(path) => path,
+        Response::OkayMultiple(_paths) => panic!("This *can't* happen"),
+        Response::Cancel => default_filename,
+    };
+    
+    let mut demo_reader = file_reader::FileReader::from_file(filename);
 
 
     let latest_version = String::from("v1");
@@ -76,9 +90,23 @@ fn main() {
     tt.add_template("tables", TABLES_TEMPLATE).unwrap();
 
     let rendered_html = tt.render("tables", &context).unwrap();
-    println!("{}", rendered_html);
+    // println!("{}", rendered_html);
 
+    // webview HIDPI "fix": https://github.com/zserge/webview/issues/54
+    web_view::builder()
+        .title("Tables 1.0.0")
+        .content(Content::Html(rendered_html))
+        .size(480, 360)
+        .resizable(true)
+        .debug(true)
+        .user_data(())
+        .invoke_handler(|_webview, _arg| Ok(()))
+        .run()
+        .unwrap();
+
+    /*
     if let Ok(mut output) = File::create("assets/outputs/output.html") {
         output.write_all(rendered_html.as_bytes()).unwrap();
     }
+    */
 }
