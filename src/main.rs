@@ -7,21 +7,20 @@ extern crate nfd;
 
 mod file_reader;
 
-use std::fs::File;
-use std::io::prelude::*;
 use tinytemplate::TinyTemplate;
 use web_view::*;
-use nfd::Response;
 
 
 #[derive(Serialize, Clone, Debug)]
 struct TemplateTableEntry {
     field: String,
+    only_use_range_start: bool,
     range_start: u32,
     range_end:   u32,
 }
-#[derive(Serialize, Clone, Debug)]
+#[derive(Serialize, Clone, Debug, Default)]
 struct TemplateTable {
+    title: String,
     entries: Vec<TemplateTableEntry>
 }
 #[derive(Serialize, Debug)]
@@ -32,16 +31,20 @@ struct TemplateContext {
 static TABLES_TEMPLATE: &'static str = include_str!("tables.html");
 static TEMPLATE_STYLES: &'static str = include_str!("styles.css");
 
+
 fn main() {
     let default_filename: &'static str = "assets/inputs/demo.tables";
     let exe_path: String = std::env::current_exe().unwrap().into_os_string().into_string().unwrap();
     
+    /*
     let nfd_result = nfd::open_file_dialog(None, Some(exe_path.as_str())).unwrap();
     let filename = match &nfd_result {
         Response::Okay(path) => path,
         Response::OkayMultiple(_paths) => panic!("This *can't* happen"),
         Response::Cancel => default_filename,
     };
+    */
+    let filename = default_filename;
     
     let mut demo_reader = file_reader::FileReader::from_file(filename);
 
@@ -59,12 +62,13 @@ fn main() {
         tables: Vec::new(),
         style: String::from(TEMPLATE_STYLES),
     };
-    let mut current_table = TemplateTable{ entries: Vec::new() };
+    let mut current_table = Default::default();
     let mut current_range = 0u32;
 
     while let Some(word) = demo_reader.next_word() {
         if word == "table" {
-            current_table = TemplateTable{ entries: Vec::new() };
+            let title = demo_reader.to_end_of_line().unwrap_or_default();
+            current_table = TemplateTable{ entries: Vec::new(), title: title };
             current_range = 0u32;
 
         } else if word == "endtable" {
@@ -74,8 +78,9 @@ fn main() {
             let word = demo_reader.to_end_of_line().unwrap_or_default();
             current_table.entries.push(TemplateTableEntry{
                 field: word,
-                range_start: current_range,
+                range_start: current_range + 1,
                 range_end: current_range + number,
+                only_use_range_start: number == 1,
             });
             current_range += number;
 
@@ -95,7 +100,6 @@ fn main() {
     web_view::builder()
         .title("Tables 1.0.0")
         .content(Content::Html(rendered_html))
-        .size(480, 360)
         .resizable(true)
         .debug(true)
         .user_data(())

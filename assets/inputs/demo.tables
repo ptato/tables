@@ -1,15 +1,21 @@
 v1
-table
-    4 Option A
-    4 Option B
-    4 Option C
-    4 Option D
-    4 Option E
+table Coastal Waters Location
+    1 Fleet
+    1 Sargassum
+    1 Flotsam
+    1 Mystical Site
+    1 Lair
+    5 Wreck
+    5 Harbor
+    7 Ship
+    8 Rocks
+    8 Fjord
+    8 Estuary
+    8 Cove
+    8 Bay
+    8 Ice
+    15 Island
+    14 Open Water
+    1 Anomaly
 endtable
 
-table
-    1 Thing
-    2 Thingg
-    3 Thingggg
-    4 Thingggggg
-endtable

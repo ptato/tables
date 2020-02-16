@@ -8,16 +8,23 @@
     {{ for table in tables }}
     <table>
         <tr>
-            <th>d100</th>
-            <th>idk</th>
+            <th>d100&nbsp;</th>
+            <th>{ table.title }</th>
         </tr>
         {{ for entry in table.entries -}}
         <tr>
-            <td>{ entry.range_start }-{ entry.range_end }</td>
+            <td>
+                {{ if entry.only_use_range_start }}
+                    { entry.range_start }
+                {{ else }}
+                    { entry.range_start }-{ entry.range_end }
+                {{ endif }}
+            </td>
             <td>{ entry.field }</td>
         </tr>
         {{ endfor }}
     </table>
+    <br>
     {{ endfor }}
 
 <style>
