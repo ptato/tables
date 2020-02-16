@@ -33,18 +33,17 @@ static TABLES_TEMPLATE: &'static str = include_str!("tables.html");
 static TEMPLATE_STYLES: &'static str = include_str!("styles.css");
 
 fn main() {
-    let default_filename: String = String::from("assets/inputs/demo.tables");
+    let default_filename: &'static str = "assets/inputs/demo.tables";
     let exe_path: String = std::env::current_exe().unwrap().into_os_string().into_string().unwrap();
     
-    let result = nfd::open_file_dialog(None, Some(exe_path.as_str())).unwrap();
-    let filename = match result {
+    let nfd_result = nfd::open_file_dialog(None, Some(exe_path.as_str())).unwrap();
+    let filename = match &nfd_result {
         Response::Okay(path) => path,
         Response::OkayMultiple(_paths) => panic!("This *can't* happen"),
         Response::Cancel => default_filename,
     };
     
     let mut demo_reader = file_reader::FileReader::from_file(filename);
-
 
     let latest_version = String::from("v1");
     let mut version = demo_reader.next_word().unwrap_or("*".to_string());
