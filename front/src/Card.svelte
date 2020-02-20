@@ -1,12 +1,13 @@
 <script>
-    export let title = "Card title";
+    export let title = "";
+    export let subtitle = "";
 </script>
 
-<a class="card">
+<a class="card" href="">
     <slot name="media"/>
     <div class="card-content">
         <span class="card-title">{title}</span>
-        <span class="card-subtitle">Secondary text</span>
+        <span class="card-subtitle">{subtitle}</span>
     </div>
 </a>
 
@@ -20,6 +21,13 @@
 
     display: inline-block;
     text-decoration: none;
+
+    transition-property: filter box-shadow;
+    transition-duration: 0.25s;
+}
+.card:hover {
+    filter: brightness(90%);
+    box-shadow: 0 0 4px lightgray;
 }
 .card :global(img) {
     max-width: 100%;
