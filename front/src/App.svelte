@@ -1,14 +1,18 @@
 <script>
     import Header from './Header.svelte';
     import Card from './Card.svelte';
+    import ImageList from './ImageList.svelte';
+
+    const images = [];
+    for (let i = 0; i < 20; i++) {
+        let src = 'https://placedog.net/500?random&idx='+i;
+        images.push({src: src, alt: 'PLACEHOLDER'});
+    }
 </script>
 
 <Header/>
 <main>
-    <Card title="Dog card" subtitle="good">
-        <img slot="media" src="https://placedog.net/500/300?random" alt="Good dog">
-    </Card>
-    <Card title="nothing" subtitle="nothing"/>
+    <ImageList {images}/>
 </main>
 
 <style>
