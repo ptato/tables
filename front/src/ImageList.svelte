@@ -24,8 +24,8 @@
             img.style.display = 'block';
             back.style.display = 'none';
         } else {
-            img.style.display = 'none';
             back.style.display = 'block';
+            img.style.display = 'none';
         }
     }
 </script>
@@ -50,6 +50,7 @@
 <style>
 .image-list {
     display: flex;
+    perspective: 1000px;
 }
 .image-list .column {
     display: flex;
@@ -76,10 +77,21 @@
 
 .image-list img {
     width: 100%;
+    backface-visibility: hidden;
 }
 .image-list .img-back {
     display: none;
     padding: 8px;
     height: 100%;
+    backface-visibility: hidden;
+}
+
+@keyframes flip {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(180deg);
+    }
 }
 </style>
