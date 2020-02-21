@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from 'svelte';
     export let images = [ ];
 
     let columns = [ [], [], [], [] ];
@@ -6,25 +7,39 @@
         columns[imageIndex % 4].push(images[imageIndex]);
     }
 
+    let imageList;
+
+    onMount(async () => {
+        imageList.querySelectorAll('img').forEach(img => {
+            img.onload = _ => {
+                img.parentElement.style.height = `${img.offsetHeight+1}px`;
+            }
+        });
+    });
+
     function clickImage(event) {
-        console.log(this);
+        let img = this.querySelector('img');
+        let back = this.querySelector('.img-back');
+        if (img.style.display === 'none') {
+            img.style.display = 'block';
+            back.style.display = 'none';
+        } else {
+            img.style.display = 'none';
+            back.style.display = 'block';
+        }
     }
 </script>
 
-<div class="image-list">
+<div class="image-list" bind:this={imageList}>
     {#each columns as column, columnIndex}
         <div class="column">
         {#each column as { src, alt }, imageIndex }
-            <div class="flip-card" ontouchstart="this.classList.toggle('hover');">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <img {src} {alt} on:click={clickImage}>
-                    </div>
-                    <div class="flip-card-back">
-                        <h1>Hola</h1>
-                        <p>Arquitecto e Ingeniero</p>
-                        <p>Buena peñita</p>
-                    </div>
+            <div class="row" on:click={clickImage}>
+                <img {src} {alt}>
+                <div class="img-back">
+                    <h1>Hola</h1>
+                    <p>Arquitecto e Ingeniero</p>
+                    <p>Buena peñita</p>
                 </div>
             </div>
         {/each}
@@ -42,44 +57,29 @@
     width: 25%;
     margin: 0 8px;
 }
-.image-list img {
+.row {
     margin: 8px 0;
     box-sizing: border-box;
+    border: 1px solid black;
     width: 100%;
 
-    transition-property: filter box-shadow;
+    transition-property: filter box-shadow transform;
     transition-duration: 0.25s;
 }
-.image-list img:hover {
+.row:hover {
     filter: brightness(90%);
     box-shadow: 0 0 4px lightgray;
 }
+.row:active {
+    transform: scale(0.95);
+}
 
-.flip-card {
-    perspective: 1000px;
-}
-.flip-card:hover .flip-card-inner, .flip-card.hover .flip-card-inner {
-    transform: rotateY(180deg);
-}
-.flip-card, .flip-card-front, .flip-card-back {
+.image-list img {
     width: 100%;
 }
-.flip-card-inner {
-    transition: 0.6s;
-    transform-style: preserve-3d;
-    position: relative;
-}
-.flip-card-front, .flip-card-back {
-    backface-visibility: hidden;
-    /*position: absolute;
-    top: 0;
-    left: 0;*/
-}
-.flip-card-front {
-    z-index: 2;
-    transform: rotateY(0deg);
-}
-.flip-card-back {
-    transform: rotateY(180deg);
+.image-list .img-back {
+    display: none;
+    padding: 8px;
+    height: 100%;
 }
 </style>
