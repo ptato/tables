@@ -1,7 +1,17 @@
+<script>
+    export let currentPage = "/";
+    function setCurrentPage(page) {
+        currentPage = page;
+        console.log(`Current page is ${page}`);
+    }
+</script>
 
 <header>
     <img src="/favicon.png" alt="ttt Icon">
     <h1>ttt</h1>
+
+    <a href="javascript:;" on:click={ _ => currentPage = '/' }>Home</a>
+    <a href="javascript:;" on:click={ _ => currentPage = '/anim' }>Anim</a>
 </header>
 
 <style>
@@ -28,5 +38,9 @@ header h1 {
     display: block;
 
     font-size: 1rem;
+}
+header a {
+    padding-left: 16px;
+    color: white;
 }
 </style>

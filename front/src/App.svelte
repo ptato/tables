@@ -1,26 +1,29 @@
 <script>
     import Header from './Header.svelte';
     import Card from './Card.svelte';
-    import ImageList from './ImageList.svelte';
+    import Home from './Home.svelte';
+    import Animations from './Animations.svelte';
 
-    const images = [];
-    for (let i = 0; i < 20; i++) {
-        let src = 'https://placedog.net/500?random&idx='+i;
-        images.push({src: src, alt: 'PLACEHOLDER'});
-    }
+    let currentPage;
 </script>
 
-<Header/>
+<Header bind:currentPage={currentPage}/>
 <main>
-    <ImageList {images}/>
+    {#if currentPage === '/anim'}
+        <Animations/>
+    {:else}
+        <Home />
+    {/if}
 </main>
 
 <style>
 main {
     background-color: #fafafa;
-    height: 100%;
+    height: calc(100vh - 32px); 
 
-    padding: 8px;
+    box-sizing: border-box;
     font-family: Roboto, sans-serif;
 }
+
+
 </style>

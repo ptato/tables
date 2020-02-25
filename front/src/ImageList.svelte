@@ -2,9 +2,9 @@
     import { onMount } from 'svelte';
     export let images = [ ];
 
-    let columns = [ [], [], [], [] ];
+    let columns = [ [], [], [] ];
     for (let imageIndex = 0; imageIndex < images.length; imageIndex++) {
-        columns[imageIndex % 4].push(images[imageIndex]);
+        columns[imageIndex % columns.length].push(images[imageIndex]);
     }
 
     let imageList;
@@ -51,11 +51,14 @@
 .image-list {
     display: flex;
     perspective: 1000px;
+    width: 50%;
+    height: 100%;
+    overflow-y: scroll;
 }
 .image-list .column {
     display: flex;
     flex-direction: column;
-    width: 25%;
+    width: 33%;
     margin: 0 8px;
 }
 .row {
