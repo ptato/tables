@@ -28,14 +28,52 @@
             img.style.display = 'none';
         }
     }
+
+    let dragged;
+
+    document.addEventListener("drag", _e => _e, false);
+    document.addEventListener("dragstart", e => {
+        dragged = e.target;
+        e.target.style.opacity = .5;
+    }, false);
+    document.addEventListener("dragend", e => {
+        event.target.style.opacity = '';
+    }, false);
+    document.addEventListener("dragover", e => {
+        e.preventDefault();
+    }, false);
+    document.addEventListener("dragenter", e => {
+        if (e.target.nodeName === "CANVAS") {
+        }
+    }, false);
+    document.addEventListener("dragleave", e => {
+        if (e.target.nodeName === "CANVAS") {
+        }
+    }, false);
+    document.addEventListener("drop", e => {
+        e.preventDefault();
+        if (e.target.nodeName == "CANVAS") {
+            let canvas = e.target;
+            let c = canvas.getContext('2d');
+
+            let rect = e.target.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+
+            let img = dragged.querySelector('img');
+
+            c.drawImage(img, x, y, img.offsetWidth, img.offsetHeight);
+        }
+    }, false);
+
 </script>
 
 <div class="image-list" bind:this={imageList}>
     {#each columns as column, columnIndex}
         <div class="column">
         {#each column as { src, alt }, imageIndex }
-            <div class="row" on:click={clickImage}>
-                <img {src} {alt}>
+            <div class="row" draggable="true" on:click={clickImage}>
+                <img draggable="false" {src} {alt}>
                 <div class="img-back">
                     <h1>Hola</h1>
                     <p>Arquitecto e Ingeniero</p>
