@@ -1,6 +1,7 @@
 <script>
     import ImageList from './ImageList.svelte';
     import DragBoard from './DragBoard.svelte';
+    import Draggable from './Draggable.svelte';
     import { onMount } from 'svelte';
 
     const images = [];
@@ -12,8 +13,9 @@
 </script>
 
 <div class="home-container">
-    <ImageList {images}/>
-    <DragBoard />
+    <Draggable x={10} y={40} w={"50vw"} h={"90vh"}>
+        <ImageList {images}/>
+    </Draggable>
 </div>
 
 <style>

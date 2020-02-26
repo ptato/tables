@@ -51,8 +51,8 @@
 .image-list {
     display: flex;
     perspective: 1000px;
-    width: 50%;
     height: 100%;
+    max-height: inherit;
     overflow-y: scroll;
 }
 .image-list .column {
